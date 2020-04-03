@@ -15,7 +15,7 @@ import os
 import PySimpleGUI as sg
 print(os.getcwd())
 
-CARDS_DIR = os.path.join(os.getcwd(),'Zero Twenty One Solitaire','Cards')
+CARDS_DIR = os.path.join(os.getcwd(),'Cards')
 print(CARDS_DIR)
 
 
