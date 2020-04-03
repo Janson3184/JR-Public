@@ -43,10 +43,6 @@ def set_up_cards(deck):
     return left_side, right_side, last_card
 
 
-
-
-
-
 def main(INSTRUCTIONS):
 
 
