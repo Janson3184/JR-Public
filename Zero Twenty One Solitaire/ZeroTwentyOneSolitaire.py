@@ -2,9 +2,11 @@
 
 Rules of the game:
 
-two decks of cards between -10 and 10.  Player is presented 2 cards at random (shuffle-mix both decks).
+Two decks of cards between -10 and 10.  Player is presented 2 cards at random (shuffle-mix both decks).
 
-Goal is to stay within 21 for 31 rounds (with a final card to force).
+Goal is to stay within 21 for 31 cards (with a final card to force the ending.).
+
+Imagine two 'towers' of cards 15 each.  You can continuously draw on either side, but the goal is to reach the 31st card.
 
 '''
 
