@@ -13,11 +13,11 @@ Imagine two 'towers' of cards 15 each.  You can continuously draw on either side
 import random
 import os
 import PySimpleGUI as sg
+
 print(os.getcwd())
 
 CARDS_DIR = os.path.join(os.getcwd(),'Cards')
 print(CARDS_DIR)
-
 
 CARDS_PER_SIDE = 15
 
@@ -25,10 +25,8 @@ CARDS_PER_SIDE = 15
 INSTRUCTIONS = '''
 Welcome to Zero 21 Solitaire!  
 
-        Select a card (1 or 2) to play it.
-        Place one of those cards on reserve (q or w).
-        To play a reserve card, press 'r'.  You may not reserve more than one card.
-        You may not discard a reserve card.  You must play it.
+Your goal is to stay above 0 and below 21.  You can put one card on reserve at a time; however, you must play the reserve
+card if you want to get rid of it.
 '''
 
 def generate_deck(number_of_stacks = 4):
@@ -64,58 +62,41 @@ def main(INSTRUCTIONS):
     sg.change_look_and_feel('lightgrey')
 
     layout = [
-        [sg.Multiline(INSTRUCTIONS, text_color='darkblue', background_color='antiquewhite',)],
+        [sg.Multiline(INSTRUCTIONS, size=(140,5),text_color='darkblue', background_color='light blue',)],
+        [sg.ProgressBar(orientation='h', size=(20, 20), key='num_left', max_value=CARDS_PER_SIDE),
+         sg.ProgressBar(orientation='h', size=(20, 20), key='num_right', max_value=CARDS_PER_SIDE), sg.Button('New Game')],
         [sg.Text(' '*100, key='LastCard')],
-        [sg.Text(f'Running Total: {running_total}', key='Running Total')],
+        [sg.Text(f'Running Total: {running_total}', key='Running Total',text_color='dark blue',font=('Helvetica', 30), size=(50,5), background_color='light blue')],
         [sg.Text(f'{left_side[0]}   {right_side[0]}                           ', key='Cards')],
         [sg.Text(f'Reserve Card: {reserve_card}                               ', key='Reserve')],
-        [sg.Button('Left', image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png',key='Left'), sg.Button('Right', image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png')],
-        [sg.Button('Store Left'), sg.Button('Store Right')],
-        [sg.Button('Use Reserve')],
-        [sg.ProgressBar(orientation='v',size=(20, 20), key='num_left', max_value=CARDS_PER_SIDE), sg.ProgressBar(orientation='v',size=(20, 20), key='num_right', max_value=CARDS_PER_SIDE)],
-        [sg.Button('New Game')],
+        [sg.Button('Left',image_size=(10,10),image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png',key='Left'),
+
+         sg.Button('Right', image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png'),
+
+         sg.Text('Reserve: '),
+
+         sg.Button('Use Reserve',
+                   image_filename=CARDS_DIR + "/" + str(reserve_card) + '.png' if reserve_card != '' else CARDS_DIR + "/nothing.png",
+                   key='Use Reserve')
+         ],
+        [sg.Button('Store Left', image_filename=CARDS_DIR + '/reserve.png'), sg.Button('Store Right', image_filename=CARDS_DIR + '/reserve.png'), ],
+
     ]
 
     # Create the Window
     window = sg.Window('Solitaire', layout)
 
+    def update_bars():
+        window['num_left'].UpdateBar(len(left_side))
+        window['num_right'].UpdateBar(len(right_side))
 
-    def update_cards():
-        if len(left_side) > 0 and len(right_side) > 0:
-            window['num_left'].UpdateBar(len(left_side))
-            window['num_right'].UpdateBar(len(right_side))
-            window['Cards'].update(f'{left_side[0]} {right_side[0]}')
-            window.Element('Left').Update(image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png')
-            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png', image_size=(10,10))
+    def update_reserve_notice():
 
-        elif len(left_side) == 0 and len(right_side) == 0:
-            window['Cards'].update(f'(Use Last Card) (Use Last Card)')
-            window['LastCard'].update(f'Last Card: {last_card}')
-            window['num_left'].UpdateBar(len(left_side))
-            window['num_right'].UpdateBar(len(right_side))
-            window.Element('Left').Update(image_filename=CARDS_DIR + "/last.png")
-            window.Element('Right').Update(image_filename=CARDS_DIR + "/last.png")
+        window['Running Total'].update(f'Running Total: {running_total}', text_color='dark blue')
+        window['Use Reserve'].update(image_filename=CARDS_DIR + "/" + str(reserve_card) + '.png' if reserve_card != '' else CARDS_DIR + "/nothing.png")
 
 
-        elif len(right_side) == 0 and len(left_side) > 0:
-            window['Cards'].update(f'{left_side[0]} (Use Last Card)')
-            window['LastCard'].update(f'Last Card: {last_card}')
-            window['num_left'].UpdateBar(len(left_side))
-            window['num_right'].UpdateBar(len(right_side))
-            window.Element('Left').Update(image_filename=CARDS_DIR + "/" + str(left_side[0]) + '.png')
-            window.Element('Right').Update(image_filename=CARDS_DIR + "/last.png")
-
-        elif len(left_side) == 0 and len(right_side) > 0:
-            window['Cards'].update(f'(Use Last Card) {right_side[0]}')
-            window['LastCard'].update(f'Last Card: {last_card}')
-            window['num_left'].UpdateBar(len(left_side))
-            window['num_right'].UpdateBar(len(right_side))
-            window.Element('Left').Update(image_filename=CARDS_DIR + "/last.png")
-            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png')
-
-
-        window['Running Total'].update(f'Running total: {running_total}')
-        if running_total >= 0 and running_total <= 21 and last_card =='':
+        if running_total >= 0 and running_total <= 21 and last_card == '':
             window['Reserve'].update("You WON!  Click New Game.")
         else:
             window['Reserve'].update(f'reserve card: {reserve_card}')
@@ -123,15 +104,47 @@ def main(INSTRUCTIONS):
         if running_total < 0 or running_total > 21:
             window['Reserve'].update(f'You lost.  Lost lost lost.')
 
+    def update_interface():
 
-    #update_cards()
+
+        if len(left_side) > 0 and len(right_side) > 0:
+            window['Cards'].update(f'{left_side[0]} {right_side[0]}')
+            window.Element('Left').Update(image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png')
+            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png', image_size=(10,10))
+
+        elif len(left_side) == 0 and len(right_side) == 0:
+            window['Cards'].update(f'(Use Last Card) (Use Last Card)')
+            window['LastCard'].update(f'Last Card: {last_card}')
+            window.Element('Left').Update(image_filename=CARDS_DIR + "/last.png")
+            window.Element('Right').Update(image_filename=CARDS_DIR + "/last.png")
+
+
+        elif len(right_side) == 0 and len(left_side) > 0:
+            window['Cards'].update(f'{left_side[0]} (Use Last Card)')
+            window['LastCard'].update(f'Last Card: {last_card}')
+            window.Element('Left').Update(image_filename=CARDS_DIR + "/" + str(left_side[0]) + '.png')
+            window.Element('Right').Update(image_filename=CARDS_DIR + "/last.png")
+
+        elif len(left_side) == 0 and len(right_side) > 0:
+            window['Cards'].update(f'(Use Last Card) {right_side[0]}')
+            window['LastCard'].update(f'Last Card: {last_card}')
+            window.Element('Left').Update(image_filename=CARDS_DIR + "/last.png")
+            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png')
+
+        update_bars()
+        update_reserve_notice()
+
+
+
+
+    #update_interface()
     running = True
 
     while running:
 
         event, values = window.read()
 
-        update_cards()
+        update_interface()
 
         final_card_in_play = len(left_side) == 0 or len(right_side) == 0
 
@@ -139,14 +152,14 @@ def main(INSTRUCTIONS):
             try:
                 running_total += left_side[0]
                 left_side.pop(0)
-                update_cards()
+                update_interface()
             except:
                 pass
         elif event == 'Right':
             try:
                 running_total += right_side[0]
                 right_side.pop(0)
-                update_cards()
+                update_interface()
             except:
                 pass
         elif event == 'Use Reserve':
@@ -156,7 +169,7 @@ def main(INSTRUCTIONS):
                 running_total += reserve_card
                 reserve_card = ''
                 window['Reserve'].update(f'reserve card: {reserve_card}')
-                update_cards()
+                update_interface()
 
         elif event in ('Store Left',  'Store Right'):
 
@@ -169,7 +182,7 @@ def main(INSTRUCTIONS):
                         reserve_card = left_side[0]
                         window['Reserve'].update(f'reserve_card: {reserve_card}')
                         left_side.pop(0)
-                        update_cards()
+                        update_interface()
                     except:
                         pass
                 elif event == 'Store Right':
@@ -177,7 +190,7 @@ def main(INSTRUCTIONS):
                         reserve_card = right_side[0]
                         window['Reserve'].update(f'reserve card: {reserve_card}')
                         right_side.pop(0)
-                        update_cards()
+                        update_interface()
                     except:
                         pass
 
@@ -214,7 +227,7 @@ def main(INSTRUCTIONS):
                 if event == 'Left':
                     running_total += last_card
                     last_card = ''
-                    update_cards()
+                    update_interface()
                     if running_total >= 0 and running_total <= 21:
                         window['Reserve'].update("You WON!  Click New Game.")
 
@@ -222,7 +235,7 @@ def main(INSTRUCTIONS):
                 if event == 'Right':
                     running_total += last_card
                     last_card = ''
-                    update_cards()
+                    update_interface()
                     if running_total >= 0 and running_total <= 21:
                         window['Reserve'].update("You WON!  Click New Game.")
 
