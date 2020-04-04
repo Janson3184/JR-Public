@@ -33,6 +33,8 @@ def generate_deck(number_of_stacks = 4):
     return [i for i in range(-10,11)] * number_of_stacks
 
 def set_up_cards(deck):
+
+
     all_cards_in_game = random.sample(deck, k=32)
     left_side = all_cards_in_game[0:CARDS_PER_SIDE + 1] # 0:16
     right_side = all_cards_in_game[CARDS_PER_SIDE + 1:31] # 16:31
@@ -62,14 +64,14 @@ def main(INSTRUCTIONS):
     sg.change_look_and_feel('lightgrey')
 
     layout = [
-        [sg.Multiline(INSTRUCTIONS, size=(140,5),text_color='darkblue', background_color='light blue',)],
+        [sg.Multiline(INSTRUCTIONS, size=(140,5),text_color='darkblue', background_color='light blue')],
         [sg.ProgressBar(orientation='h', size=(20, 20), key='num_left', max_value=CARDS_PER_SIDE),
          sg.ProgressBar(orientation='h', size=(20, 20), key='num_right', max_value=CARDS_PER_SIDE), sg.Button('New Game')],
         [sg.Text(' '*100, key='LastCard')],
         [sg.Text(f'Running Total: {running_total}', key='Running Total',text_color='dark blue',font=('Helvetica', 30), size=(50,5), background_color='light blue')],
         [sg.Text(f'{left_side[0]}   {right_side[0]}                           ', key='Cards')],
         [sg.Text(f'Reserve Card: {reserve_card}                               ', key='Reserve')],
-        [sg.Button('Left',image_size=(10,10),image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png',key='Left'),
+        [sg.Button('Left',image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png',key='Left'),
 
          sg.Button('Right', image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png'),
 
@@ -80,21 +82,26 @@ def main(INSTRUCTIONS):
                    key='Use Reserve')
          ],
         [sg.Button('Store Left', image_filename=CARDS_DIR + '/reserve.png'), sg.Button('Store Right', image_filename=CARDS_DIR + '/reserve.png'), ],
-
     ]
+
 
     # Create the Window
     window = sg.Window('Solitaire', layout)
 
+
     def update_bars():
+        '''Update progress bars that show the total amount of cards left'''
+
         window['num_left'].UpdateBar(len(left_side))
         window['num_right'].UpdateBar(len(right_side))
 
     def update_reserve_notice():
+        '''Shows the running total and reserve card status.
+        Also shows winning and losing status.
+        '''
 
         window['Running Total'].update(f'Running Total: {running_total}', text_color='dark blue')
         window['Use Reserve'].update(image_filename=CARDS_DIR + "/" + str(reserve_card) + '.png' if reserve_card != '' else CARDS_DIR + "/nothing.png")
-
 
         if running_total >= 0 and running_total <= 21 and last_card == '':
             window['Reserve'].update("You WON!  Click New Game.")
@@ -105,12 +112,14 @@ def main(INSTRUCTIONS):
             window['Reserve'].update(f'You lost.  Lost lost lost.')
 
     def update_interface():
-
+        '''
+        Depending on which set is empty, updates the left or right side card statuses depending on the length.
+        '''
 
         if len(left_side) > 0 and len(right_side) > 0:
             window['Cards'].update(f'{left_side[0]} {right_side[0]}')
             window.Element('Left').Update(image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png')
-            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png', image_size=(10,10))
+            window.Element('Right').Update(image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png')
 
         elif len(left_side) == 0 and len(right_side) == 0:
             window['Cards'].update(f'(Use Last Card) (Use Last Card)')
