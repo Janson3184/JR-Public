@@ -68,14 +68,14 @@ def main(INSTRUCTIONS):
         [sg.ProgressBar(orientation='h', size=(20, 20), key='num_left', max_value=CARDS_PER_SIDE),
          sg.ProgressBar(orientation='h', size=(20, 20), key='num_right', max_value=CARDS_PER_SIDE), sg.Button('New Game')],
         [sg.Text(' '*100, key='LastCard')],
-        [sg.Text(f'Running Total: {running_total}', key='Running Total',text_color='dark blue',font=('Helvetica', 30), size=(50,5), background_color='light blue')],
-        [sg.Text(f'{left_side[0]}   {right_side[0]}                           ', key='Cards')],
-        [sg.Text(f'Reserve Card: {reserve_card}                               ', key='Reserve')],
+        [sg.Text(f'Running Total: {running_total}', key='Running Total',text_color='dark blue',font=('Helvetica', 30), size=(50,1), background_color='light blue')],
+        [sg.Text(f'{left_side[0]}   {right_side[0]}                           ', key='Cards', visible=False)],
+        [sg.Text(f'Reserve Card: {reserve_card}                               ', key='Reserve', visible=False)],
         [sg.Button('Left',image_filename=CARDS_DIR + "/" +str(left_side[0]) + '.png',key='Left'),
 
          sg.Button('Right', image_filename=CARDS_DIR + "/" + str(right_side[0]) + '.png'),
 
-         sg.Text('Reserve: '),
+         sg.Text('Reserve: ', font=('Helvetica', 50)),
 
          sg.Button('Use Reserve',
                    image_filename=CARDS_DIR + "/" + str(reserve_card) + '.png' if reserve_card != '' else CARDS_DIR + "/nothing.png",
@@ -104,12 +104,12 @@ def main(INSTRUCTIONS):
         window['Use Reserve'].update(image_filename=CARDS_DIR + "/" + str(reserve_card) + '.png' if reserve_card != '' else CARDS_DIR + "/nothing.png")
 
         if running_total >= 0 and running_total <= 21 and last_card == '':
-            window['Reserve'].update("You WON!  Click New Game.")
+            window['Running Total'].update("You WON!  Click New Game.")
         else:
             window['Reserve'].update(f'reserve card: {reserve_card}')
 
         if running_total < 0 or running_total > 21:
-            window['Reserve'].update(f'You lost.  Lost lost lost.')
+            window['Running Total'].update(f'{running_total} You lost.  Lost lost lost.')
 
     def update_interface():
         '''
@@ -144,9 +144,6 @@ def main(INSTRUCTIONS):
         update_reserve_notice()
 
 
-
-
-    #update_interface()
     running = True
 
     while running:
@@ -207,12 +204,12 @@ def main(INSTRUCTIONS):
             window.close()
             main(INSTRUCTIONS='')
 
-        you_lose = (running_total >= 21) or (running_total < 0)
+        you_lose = (running_total > 21) or (running_total < 0)
 
         if you_lose:
             while running:
                 event, values = window.read()
-                window['Reserve'].update('You lost.  Click New Game.')
+                window['Running Total'].update('You lost.  Click New Game.')
                 if event not in ('New Game'):
                     pass
 
@@ -224,7 +221,7 @@ def main(INSTRUCTIONS):
             if last_card == '':
                 while running:
                     event, values = window.read()
-                    window['Reserve'].update("You WON!  Click New Game.")
+                    window['Running Total'].update("You WON!  Click New Game.")
                     if event not in ('New Game'):
                         pass
 
@@ -238,7 +235,7 @@ def main(INSTRUCTIONS):
                     last_card = ''
                     update_interface()
                     if running_total >= 0 and running_total <= 21:
-                        window['Reserve'].update("You WON!  Click New Game.")
+                        window['Running Total'].update("You WON!  Click New Game.")
 
             elif len(right_side)== 0:
                 if event == 'Right':
@@ -246,7 +243,7 @@ def main(INSTRUCTIONS):
                     last_card = ''
                     update_interface()
                     if running_total >= 0 and running_total <= 21:
-                        window['Reserve'].update("You WON!  Click New Game.")
+                        window['Running Total'].update("You WON!  Click New Game.")
 
 
 
