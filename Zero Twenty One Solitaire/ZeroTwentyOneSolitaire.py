@@ -42,6 +42,10 @@ def set_up_cards(deck):
     
     return left_side, right_side, last_card
 
+def play_new_game(window):
+    window.close()
+    main(INSTRUCTIONS='')
+
 
 def main(INSTRUCTIONS):
 
@@ -201,33 +205,30 @@ def main(INSTRUCTIONS):
                         pass
 
         elif event in ('New Game'):
-            window.close()
-            main(INSTRUCTIONS='')
+            play_new_game(window)
 
         you_lose = (running_total > 21) or (running_total < 0)
 
         if you_lose:
             while running:
                 event, values = window.read()
-                window['Running Total'].update('You lost.  Click New Game.')
+                window['Running Total'].update('Click New Game.  It will be better next time.')
                 if event not in ('New Game'):
                     pass
 
                 else:
-                    window.close()
-                    main(INSTRUCTIONS='')
+                    play_new_game(window)
 
         if final_card_in_play:
             if last_card == '':
                 while running:
                     event, values = window.read()
-                    window['Running Total'].update("You WON!  Click New Game.")
+                    window['Running Total'].update("You WON!  Click New Game.  You got this.")
                     if event not in ('New Game'):
                         pass
 
                     else:
-                        window.close()
-                        main(INSTRUCTIONS='')
+                        play_new_game(window)
 
             elif len(left_side) == 0:
                 if event == 'Left':
