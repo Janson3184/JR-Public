@@ -32,6 +32,7 @@ class Deck():
         print('Deck is now emptied')
 
     def show_cards(self):
+        print(f'There are {len(self.cards)} cards')
         for card in self.cards:
             card.show_card()
 
@@ -60,6 +61,9 @@ class Player():
         '''Generate a new deck if there are no more cards.'''
         if len(Deck.cards) == 0:
             Deck.create_deck()
+
+    def put_deck_in_the_fire(self, Deck):
+        Deck.cards = []
 
     def show_hand(self):
         print(f'{self.name} is showing a hand.')
@@ -91,3 +95,6 @@ bob.draw_cards(my_deck, 200)
 bob.show_hand()
 
 print(len(my_deck.cards)) # After bob draws from the deck.
+
+#bob.put_deck_in_the_fire(my_deck)
+my_deck.show_cards()
