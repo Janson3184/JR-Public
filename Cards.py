@@ -85,13 +85,13 @@ class Player():
             card.show_card()
 
     def ask_if_card(self):
-        print([c.value_string for c in self.hand])
         if len(self.hand) != 0:
             card_value = ''
             while card_value not in [c.value_string for c in self.hand]:
-                card_value = input('Card value? ')
+                card_value = input(f'{self.name} Card value? ')
                 if card_value not in [c.value_string for c in self.hand]:
                     print('You must type a value in hand.')
+            print(f'Got any {card_value}s?')
             return card_value
         else:
             print('Your hand is empty :-(')
@@ -104,16 +104,78 @@ class Player():
             print(f'For {self.name}: Too many or some kind of weird negative number.  Or your deck is empty. Unable to discard anything.')
 
 
-my_deck = Deck(has_joker=True)
-my_deck.shuffle_cards()
+
+
+#my_deck = Deck(has_joker=True)
+#my_deck.shuffle_cards()
 player_1 = Player('Jonathan')
-player_1.draw_cards(my_deck,5)
+#player_1.draw_cards(my_deck,2)
+
+player_1.hand.append(Card('Ace','Spades'))
 player_1.show_hand()
 
-player_1.discard_card(5)
 
 
-player_1.ask_if_card()
+player_2 = Player('Samantha')
+player_2.hand.append(Card('Ace','Spades'))
+#player_2.draw_cards(my_deck, 2)
+player_2.show_hand()
+
+while len(player_1.hand) != 0 or len(player_2.hand) != 0:
+    asked_card = player_1.ask_if_card()
+    if asked_card in [c.value_string for c in player_2.hand]:
+
+        for i, o in enumerate(player_1.hand):
+            if o.value_string == asked_card:
+                del player_1.hand[i]
+                break
+
+        for i, o in enumerate(player_2.hand):
+            if o.value_string == asked_card:
+                del player_2.hand[i]
+                break
+
+
+
+        print('Yes, I have that card.')
+    else:
+        print('Go fish.')
+        print(len(player_1.hand))
+        player_1.draw_cards(my_deck,1)
+        print(len(player_1.hand))
+
+    print()
+    player_1.show_hand()
+    print()
+    player_2.show_hand()
+
+    asked_card = player_2.ask_if_card()
+
+    if asked_card in [c.value_string for c in player_1.hand]:
+
+        for i, o in enumerate(player_1.hand):
+            if o.value_string == asked_card:
+                del player_1.hand[i]
+                break
+
+        for i, o in enumerate(player_2.hand):
+            if o.value_string == asked_card:
+                del player_2.hand[i]
+                break
+
+
+        print('Yes, I have that card.')
+    else:
+        print('Go fish.')
+        print(len(player_2.hand))
+        player_2.draw_cards(my_deck,1)
+        print(len(player_2.hand))
+
+    print()
+    player_1.show_hand()
+    print()
+    player_2.show_hand()
+
 
 
 
