@@ -55,8 +55,9 @@ class Player():
     def __init__(self, name):
         self.hand = []
         self.name = name
+        self.points = 0
 
-    def draw_cards(self, Deck, number_of_cards):
+    def draw_cards(self, Deck, number_of_cards):        # With replacement...
         '''Select a number of cards from a deck.  Place those cards in hand.'''
 
         try:
@@ -106,38 +107,35 @@ class Player():
 
 
 
-#my_deck = Deck(has_joker=True)
-#my_deck.shuffle_cards()
+my_deck = Deck(has_joker=False)
+my_deck.shuffle_cards()
 player_1 = Player('Jonathan')
-#player_1.draw_cards(my_deck,2)
-
-player_1.hand.append(Card('Ace','Spades'))
+player_1.draw_cards(my_deck,7)
 player_1.show_hand()
-
-
-
 player_2 = Player('Samantha')
-player_2.hand.append(Card('Ace','Spades'))
-#player_2.draw_cards(my_deck, 2)
+player_2.draw_cards(my_deck, 7)
 player_2.show_hand()
 
-while len(player_1.hand) != 0 or len(player_2.hand) != 0:
+
+turns = 0
+
+while (len(player_1.hand) != 0 or len(player_2.hand) != 0) and turns < 2:
     asked_card = player_1.ask_if_card()
     if asked_card in [c.value_string for c in player_2.hand]:
 
         for i, o in enumerate(player_1.hand):
             if o.value_string == asked_card:
                 del player_1.hand[i]
-                break
 
         for i, o in enumerate(player_2.hand):
             if o.value_string == asked_card:
                 del player_2.hand[i]
-                break
-
+                player_1.points += 1    # Give player 1 a point for each card eliminated from player 2 hand.
 
 
         print('Yes, I have that card.')
+
+
     else:
         print('Go fish.')
         print(len(player_1.hand))
@@ -156,12 +154,11 @@ while len(player_1.hand) != 0 or len(player_2.hand) != 0:
         for i, o in enumerate(player_1.hand):
             if o.value_string == asked_card:
                 del player_1.hand[i]
-                break
+                player_2.points += 1
 
         for i, o in enumerate(player_2.hand):
             if o.value_string == asked_card:
                 del player_2.hand[i]
-                break
 
 
         print('Yes, I have that card.')
@@ -176,6 +173,11 @@ while len(player_1.hand) != 0 or len(player_2.hand) != 0:
     print()
     player_2.show_hand()
 
+    turns += 1
+
+
+for p in [player_1, player_2]:
+    print(f'{p.name} has {p.points - len(p.hand)} Points') # Winner is highest.
 
 
 
