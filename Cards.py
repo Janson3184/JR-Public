@@ -11,6 +11,8 @@ class Card():
     def __init__(self, value, suit):
         self.value = value
         self.suit = suit
+        
+        self.value_string = str(value)
 
 
     def show_card(self):
@@ -82,8 +84,43 @@ class Player():
         for card in self.hand:
             card.show_card()
 
+    def ask_if_card(self):
+        print([c.value_string for c in self.hand])
+        if len(self.hand) != 0:
+            card_value = ''
+            while card_value not in [c.value_string for c in self.hand]:
+                card_value = input('Card value? ')
+                if card_value not in [c.value_string for c in self.hand]:
+                    print('You must type a value in hand.')
+            return card_value
+        else:
+            print('Your hand is empty :-(')
+    
+    def discard_card(self, number_of_cards):
+        if number_of_cards <= len(self.hand):
+            for i in range(number_of_cards):
+                self.hand.pop()
+        else:
+            print(f'For {self.name}: Too many or some kind of weird negative number.  Or your deck is empty. Unable to discard anything.')
+
 
 my_deck = Deck(has_joker=True)
+my_deck.shuffle_cards()
+player_1 = Player('Jonathan')
+player_1.draw_cards(my_deck,5)
+player_1.show_hand()
+
+player_1.discard_card(5)
+
+
+player_1.ask_if_card()
+
+
+
+
+
+
+'''
 other_deck = Deck()
 
 other_deck.empty_deck()
@@ -109,3 +146,5 @@ print(len(my_deck.cards)) # After bob draws from the deck.
 
 #bob.put_deck_in_the_fire(my_deck)
 my_deck.show_cards()
+'''
+
