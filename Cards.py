@@ -1,4 +1,6 @@
 import random
+#   Input validation packages here?  Checks to see if user entering proper values?
+
 
 class Card():
     '''
@@ -18,14 +20,20 @@ class Card():
 class Deck():
     '''A deck of cards.  Generates a list of card objects. Allows for shuffling and showing all cards.'''
 
-    def __init__(self):
+    def __init__(self, has_joker=False):
         self.cards = []
-        self.create_deck()
+        self.create_deck(has_joker)
 
-    def create_deck(self):
+    def create_deck(self, has_joker=False):
+        '''Create a stack of cards.  May include a standard pair of Jokers.'''
         for i, value in enumerate([x for x in ['Ace'] + list(range(2,11)) + ['Jack','Queen','King']]):
             for suit in ['Spades', 'Hearts','Diamonds','Clubs']:
                 self.cards.append(Card(value, suit))
+
+        if has_joker:
+            for suit in ['Joker']:
+                for color in ['red','black']:
+                    self.cards.append(Card(color,suit))
 
     def empty_deck(self):
         self.cards = []
@@ -47,6 +55,8 @@ class Player():
         self.name = name
 
     def draw_cards(self, Deck, number_of_cards):
+        '''Select a number of cards from a deck.  Place those cards in hand.'''
+
         try:
             assert number_of_cards > 0
         except AssertionError as e:
@@ -63,19 +73,20 @@ class Player():
             Deck.create_deck()
 
     def put_deck_in_the_fire(self, Deck):
+        '''Just completely obliterate the deck.'''
         Deck.cards = []
 
     def show_hand(self):
+        '''Display all cards in hand.'''
         print(f'{self.name} is showing a hand.')
         for card in self.hand:
             card.show_card()
 
 
-my_deck = Deck()
+my_deck = Deck(has_joker=True)
 other_deck = Deck()
 
 other_deck.empty_deck()
-
 other_deck.show_cards()
 
 
@@ -91,7 +102,7 @@ my_deck.shuffle_cards()
 print(len(my_deck.cards)) # Before bob draws from the deck.
 
 bob = Player('Bob')
-bob.draw_cards(my_deck, 200)
+bob.draw_cards(my_deck, 5)
 bob.show_hand()
 
 print(len(my_deck.cards)) # After bob draws from the deck.
