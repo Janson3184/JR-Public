@@ -105,6 +105,37 @@ class Player():
             print(f'For {self.name}: Too many or some kind of weird negative number.  Or your deck is empty. Unable to discard anything.')
 
 
+class Table():
+    def __init__(self, height, width):
+        self.height = height
+        self.width = width
+        self.area = height * width
+
+        self.decks = []
+        self.players = []
+
+    def add_deck(self, deck):
+        self.decks.append(deck)
+
+    def get_area_taken_by_decks(self):
+        return sum([5 for x in self.decks])
+
+    def get_space_left(self):
+        return self.area - self.get_area_taken_by_decks()
+
+    def add_players(self, players):
+        ''':arg
+        Takes a list of one or more players and adds them.
+        '''
+        for p in players:
+            self.players.append(p)
+
+    def get_number_of_players(self):
+        return len(self.players)
+
+
+
+
 
 
 my_deck = Deck(has_joker=False)
@@ -117,6 +148,21 @@ player_2.draw_cards(my_deck, 7)
 player_2.show_hand()
 
 
+
+playing_table = Table(5,5)
+playing_table.add_players([player_1,player_2])
+
+print(playing_table.get_number_of_players())
+
+print(playing_table.area)
+playing_table.add_deck(my_deck)
+print(playing_table.get_space_left())
+
+
+for p in playing_table.players:
+    print(p.points)
+
+'''
 turns = 0
 
 while (len(player_1.hand) != 0 or len(player_2.hand) != 0) and turns < 2:
@@ -184,7 +230,7 @@ for p in [player_1, player_2]:
 
 
 
-'''
+
 other_deck = Deck()
 
 other_deck.empty_deck()

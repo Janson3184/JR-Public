@@ -224,7 +224,7 @@ def main(INSTRUCTIONS):
                 while running:
                     event, values = window.read()
                     window['Running Total'].update("You WON!  Click New Game.  You got this.")
-                    if event not in ('New Game'):
+                    if type(event) is not None and event not in ('New Game'):
                         pass
 
                     else:
