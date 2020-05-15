@@ -21,6 +21,9 @@ class TicTacToe():
         print(instructions)
 
     def play(self):
+        '''
+        Plays tic tac toe.
+        '''
 
         running = True
         round = 1
@@ -43,6 +46,15 @@ class TicTacToe():
             self.game_board.place_marker(current_player.draw_marker(), chosen_row, chosen_column)
 
             print("Check winning conditions and decide to end game.")
+
+            winning_condition = self.game_board.check_winning_conditions()
+
+            if winning_condition != False:
+                self.game_board.display_board()
+                for p in self.players:
+                    if p.marker == winning_condition:
+                        print(f'{p.name} is the winner.')
+                break
 
             round += 1
 
@@ -150,24 +162,6 @@ class Player():
     def draw_marker(self):
         return Marker(self.marker)
 
-
-
-game_board = Board()
-
-jonathan = Player('Jonathan','x')
-samantha = Player('Samantha','o')
-
-
-[print(x) for x in game_board.place_marker(samantha.draw_marker(), 1, 1)]
-print()
-[print(x) for x in game_board.place_marker(samantha.draw_marker(), 1, 2)]
-print()
-[print(x) for x in game_board.place_marker(samantha.draw_marker(), 3, 3)]
-print()
-[print(x) for x in game_board.place_marker(samantha.draw_marker(), 2, 2)]
-print()
-
-print(game_board.check_winning_conditions())
 
 game = TicTacToe()
 game.play()
