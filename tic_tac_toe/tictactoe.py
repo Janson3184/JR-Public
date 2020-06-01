@@ -1,4 +1,5 @@
 import numpy as np
+import webbrowser
 
 
 class TicTacToe():
@@ -35,15 +36,23 @@ class TicTacToe():
 
             self.game_board.display_board()
 
-            chosen_row = int(input("Pick a Row (q to quit) >>> "))
-            chosen_column = int(input("Pick a Column (q to quit) >>> "))
+            chosen_row = input("Pick a Row (q to quit) >>> ")
+            chosen_column = input("Pick a Column (q to quit) >>> ")
+
+            try:
+                chosen_row, chosen_column = int(chosen_row), int(chosen_column)
+            except:
+                pass
+
 
             if chosen_column == 'q' or chosen_row == 'q':
                 break
+            elif chosen_column == 'g' or chosen_row == 'g':
+                self.browser()
 
-            print(f"{current_player.name} has chosen to place a marker at {chosen_row, chosen_column}")
+            else:
+                self.play_turn(chosen_row, chosen_column, current_player)
 
-            self.game_board.place_marker(current_player.draw_marker(), chosen_row, chosen_column)
 
             print("Check winning conditions and decide to end game.")
 
@@ -58,6 +67,12 @@ class TicTacToe():
 
             round += 1
 
+    def play_turn(self, chosen_row, chosen_column, current_player):
+        print(f"{current_player.name} has chosen to place a marker at {chosen_row, chosen_column}")
+        self.game_board.place_marker(current_player.draw_marker(), chosen_row, chosen_column)
+
+    def browser(self):
+        webbrowser.open('https://www.youtube.com/watch?v=JlBx-t7iKYY&t=0m40s')
 
 
 class Marker():
@@ -134,10 +149,10 @@ class Board():
         for i in range(len(board)):
             diagonals[0].append(self.board[i][i])
 
-        row = 1
+        row = 0
         for i in reversed(range(len(board))):
             diagonals[1].append(self.board[row][i])
-            row == 1
+            row += 1
 
         print('checking diagonals, which means checking rows...')
         return self.check_rows(diagonals)
