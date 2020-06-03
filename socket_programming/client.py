@@ -26,7 +26,7 @@ router to devices, allowing for modem connection
 import socket
 
 HEADER = 64
-PORT = 5051
+PORT = 5050
 FORMAT = "utf-8"
 DISCONNECT_MESSAGE = "!DISCONNECT"
 SERVER = socket.gethostbyname(socket.gethostname())
@@ -37,6 +37,11 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
 def send(msg):
+    '''
+    Sends a string (encoded into bytes) for submission to a server.
+
+    :msg string
+    '''
     message = msg.encode(FORMAT)    # Into bytes
     '''The first message sent should be the length of the message
     that is about to be sent.'''
@@ -52,4 +57,4 @@ def send(msg):
 send('Hello world')
 send('Hello Everyone')
 
-send(DISCONNECT_MESSAGE)
+#send(DISCONNECT_MESSAGE)

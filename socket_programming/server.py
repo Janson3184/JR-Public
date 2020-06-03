@@ -15,7 +15,7 @@ import threading
 HEADER = 64 #   Bytes.
 '''First message to a connection will always be 64 bytes.'''
 
-PORT = 5051 #   Above port 4000 are inactive
+PORT = 5050 #   Above port 4000 are inactive
 SERVER = socket.gethostbyname(socket.gethostname()) #   This device
 ADDR = (SERVER, PORT)
 FORMAT = "utf-8"
@@ -50,9 +50,9 @@ def handle_client(conn, addr):
             print(f"[{addr}] {msg}")
             conn.send("Msg received!".encode(FORMAT))
     conn.close()
+    print(f"{addr} peaced out.")
 
-
-def start():
+def run_server():
     '''Starts the server and listens
     for multiple connections.'''
 
@@ -67,4 +67,4 @@ def start():
         print(f"[ACTIVE CONNECTIONS] {threading.active_count() - 1}")   #   Minus the thread that started this...
 
 print("[STARTING] server is starting...")
-start()
+run_server()
