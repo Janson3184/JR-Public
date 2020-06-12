@@ -8,6 +8,7 @@ This will run on a local IP address
 
 import socket
 import threading
+import json
 
 #   Put different messages in different threads
 #   so program isn't waiting to finish receiving or sending
@@ -44,8 +45,17 @@ def handle_client(conn, addr):
             msg_length = int(msg_length)
             msg = conn.recv(msg_length).decode(FORMAT)
 
-            if msg == DISCONNECT_MESSAGE:
+            if msg == DISCONNECT_MESSAGE:   #   Disconnect message received
                 connected = False
+
+            try:                            #   Check to see if JSON received.
+                json_object = json.loads(msg)
+                print("[JSON SUCCESS] Printing JSON values...")
+                for k, v in json_object.items():
+                    print(k, v)
+            except:
+                print(f"{msg} is not a JSON object.")
+
 
             print(f"[{addr}] {msg}")
             conn.send("Msg received!".encode(FORMAT))

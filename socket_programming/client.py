@@ -24,6 +24,7 @@ router to devices, allowing for modem connection
 '''
 
 import socket
+import json
 
 HEADER = 64
 PORT = 5050
@@ -54,7 +55,9 @@ def send(msg):
     client.send(message)
     print(client.recv(2048))
 
-send('Hello world')
-send('Hello Everyone')
 
-#send(DISCONNECT_MESSAGE)
+
+send(json.dumps({'hello':'there', 'how':234, 'are':False, 'You':23423423}))
+send('Hello world')
+send('My wife is driving me crazy')
+send(DISCONNECT_MESSAGE)
