@@ -15,12 +15,21 @@ list = string.split(' ')
 
 
 def countdown(t):
+    '''
+    Countdown timer in seconds.  Not accurate.
+
+    :argument t int
+    '''
     print(f'Waiting {t-1} seconds.  Cursors ready...')
     for i in reversed(range(1,t)):
         print(i)
         time.sleep(1)
 
+
 def scan_box():
+    '''
+    Sends commands to the keyboard.
+    '''
 
     countdown(4)
 
@@ -30,6 +39,7 @@ def scan_box():
             keyboard.write(word)
             keyboard.press_and_release('return')
             counter += 1
+
 
 scan_box()
 
