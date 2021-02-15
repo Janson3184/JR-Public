@@ -1,17 +1,19 @@
-import keyboard
 import datetime
 import time
+
+import keyboard
 
 '''
 From: https://pypi.org/project/keyboard/
 '''
+
 MAX_RECORDS = 81
 
 start = datetime.datetime.now()
 
 string = 'CH000the CH0quick CH0brown CH000fox CH0jumps CH00over CH000the CH00lazy CH000dog'
 
-list = string.split(' ')
+list = string.split(' ')    #   ['CH000the', 'CH0quick'... ]
 
 
 def countdown(t):
@@ -20,8 +22,9 @@ def countdown(t):
 
     :argument t int
     '''
-    print(f'Waiting {t-1} seconds.  Cursors ready...')
-    for i in reversed(range(1,t)):
+
+    print(f'Waiting {t} seconds.  Cursors ready...')
+    for i in reversed(range(1,t+1)):
         print(i)
         time.sleep(1)
 
@@ -31,7 +34,7 @@ def scan_box():
     Sends commands to the keyboard.
     '''
 
-    countdown(4)
+    countdown(3)
 
     counter = 0
     while counter < MAX_RECORDS:

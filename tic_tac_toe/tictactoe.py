@@ -45,10 +45,12 @@ class TicTacToe():
                 pass
 
 
-            if chosen_column == 'q' or chosen_row == 'q':
+            if chosen_column == 'q' or chosen_row == 'q':                           #   quit game.
                 break
             elif chosen_column == 'g' or chosen_row == 'g':
                 self.browser()
+            elif type(chosen_column) is not int and type(chosen_row) is not int:    #   Anything other than integer...
+                pass
 
             else:
                 self.play_turn(chosen_row, chosen_column, current_player)
@@ -81,6 +83,9 @@ class Marker():
 
     def underline_icon(self):
         return self.icon + '\n__'
+
+    def pretty_starry_icon(self):
+        return '**' + self.icon + '**'
 
 
 class Board():
@@ -116,7 +121,7 @@ class Board():
         row -= 1
         column -= 1
 
-        self.board[row][column] = marker_object.icon
+        self.board[row][column] = marker_object.pretty_starry_icon()
         return self.board
 
     def check_rows(self, board=None):

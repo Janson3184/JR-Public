@@ -48,6 +48,7 @@ def send(msg):
     that is about to be sent.'''
 
     msg_length = len(message)
+    print(f'message length: {msg_length}')
     send_length = str(msg_length).encode(FORMAT)
 
     send_length += b' ' * (HEADER - len(send_length))

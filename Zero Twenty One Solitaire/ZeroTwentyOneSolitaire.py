@@ -249,4 +249,4 @@ def main(INSTRUCTIONS):
 
 
 if __name__ == '__main__':
-    main(INSTRUCTIONS)
+    main(INSTRUCTIONS=INSTRUCTIONS)

@@ -28,6 +28,7 @@ class Deck():
 
     def create_deck(self, has_joker=False):
         '''Create a stack of cards.  May include a standard pair of Jokers.'''
+
         for i, value in enumerate([x for x in ['Ace'] + list(range(2,11)) + ['Jack','Queen','King']]):
             for suit in ['Spades', 'Hearts','Diamonds','Clubs']:
                 self.cards.append(Card(value, suit))
